@@ -1,16 +1,16 @@
-import tkinter as tk
-from Background import Background
+import PyQt5.QtWidgets as qt
+from Character import Character
 
 
-class Window(tk.Tk):
+class Window(qt.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.title('Flappy Man')
-        self.state('zoomed')
-        self.background = Background(self)
-        # self.background_image = tk.PhotoImage(file='img/background.png')
-        # self.background_label = tk.Label(self, image=self.background_image)
-        # self.wm_attributes("-transparentcolor", "white")
-        # self.background_label.place(x=0, y=0, relwidth=1, relheight=1)
-        # self.background = Background(self)
-        self.bind('<KeyPress>', self.background.character.move)
+        self.setWindowTitle('Flappy Man')
+        self.showMaximized()
+        self.setObjectName('ManiWindow')
+        # self.setLayout(qt.QVBoxLayout(root))
+        self.setStyleSheet("#ManiWindow {border-image: url(img/background.png);}")
+        self.character = Character(self)
+
+    def keyPressEvent(self, event):
+        self.character.character_move(event)

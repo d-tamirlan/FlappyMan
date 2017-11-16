@@ -1,72 +1,75 @@
-import tkinter as tk
-# from PIL import ImageTk, Image
-
-class Character():
-    x_pace = 50
-    y_pace = 50
-
-    def __init__(self, background, character_image_path):
-        self.background = background
-        self.character_image = tk.PhotoImage(file=character_image_path)
-        self.character = self.background.create_image(100, 100, image=self.character_image)
-
-        # self.config(bg='systemTransparent')
-    #
-    # def check_in_window(self, direction):
-    #     x = self.winfo_x()
-    #     y = self.winfo_y()
-    #
-    #     window = self.master
-    #
-    #     if direction == 'Up':
-    #         if y-self.y_pace > 0:
-    #             return True
-    #         else:
-    #             return False
-    #
-    #     elif direction == 'Right':
-    #         window_width = window.winfo_width()
-    #         character_width = self.winfo_width()
-    #         if (x + character_width) + self.x_pace < window_width:
-    #             return True
-    #         else:
-    #             return False
-    #     elif direction == 'Down':
-    #         window_height = window.winfo_height()
-    #         character_height = self.winfo_height()
-    #
-    #         if (y+character_height) + self.y_pace < window_height:
-    #             return True
-    #         else:
-    #             return False
-    #     elif direction == 'Left':
-    #         if x - self.x_pace > 0:
-    #             return True
-    #         else:
-    #             return False
-    #     # calculate x and y coordinates for the Tk root window
-    #
-    #     print('x', x)
-    #     print('y', y)
+import PyQt5.QtWidgets as qt
+import PyQt5.QtGui as qt_gui
+import PyQt5.QtCore as q_core
 
 
+class Character(qt.QLabel):
+    step = 50
 
-    def move(self, event):
-        x = self.winfo_x()
-        y = self.winfo_y()
+    def __init__(self, window):
+        super().__init__(window)
+        self.setObjectName('character')
+        self.setStyleSheet('#character {border: 1px solid black}')
+        character_image = qt_gui.QPixmap('img/character.png')
+        self.setPixmap(character_image)
+        self.move(100, 100)
+        self.resize(character_image.width(), character_image.height())
+        self.show()
 
-        if event.keysym == 'Up':
+    def check_in_window(self, direction):
+        x = self.x()
+        y = self.y()
+
+        window = self.window()
+
+        if direction == 'Up':
+            if y - self.step >= 0:
+                return True
+            else:
+                return False
+
+        elif direction == 'Right':
+            window_width = window.width()
+            character_width = self.width()
+            character_right_bound = x + character_width
+
+            if character_right_bound + self.step <= window_width:
+                return True
+            else:
+                return False
+
+        elif direction == 'Down':
+            window_height = window.height()
+            character_height = self.height()
+            character_bottom_bound = y + character_height
+
+            if character_bottom_bound + self.step <= window_height:
+                return True
+            else:
+                return False
+
+        elif direction == 'Left':
+            if x - self.step >= 0:
+                return True
+            else:
+                return False
+
+    def character_move(self, event):
+        x = self.x()
+        y = self.y()
+
+        if event.key() == q_core.Qt.Key_Up:
             if self.check_in_window('Up'):
-                self.place(x=x, y=y-self.y_pace)
+                self.move(x, y-self.step)
 
-        elif event.keysym == 'Down':
+        elif event.key() == q_core.Qt.Key_Down:
             if self.check_in_window('Down'):
-                self.place(x=x, y=y+self.y_pace)
+                self.move(x, y+self.step)
 
-        elif event.keysym == 'Right':
+        elif event.key() == q_core.Qt.Key_Right:
             if self.check_in_window('Right'):
-                self.place(x=x+self.x_pace, y=y)
+                self.move(x+self.step, y)
 
-        elif event.keysym == 'Left':
+        elif event.key() == q_core.Qt.Key_Left:
             if self.check_in_window('Left'):
-                self.place(x=x-self.x_pace, y=y)
+                self.move(x-self.step, y)
