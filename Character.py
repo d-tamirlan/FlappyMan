@@ -4,13 +4,13 @@ import PyQt5.QtCore as q_core
 
 
 class Character(qt.QLabel):
-    step = 50
+    step = 45
 
-    def __init__(self, window):
+    def __init__(self, window, character_image_path):
         super().__init__(window)
         self.setObjectName('character')
-        self.setStyleSheet('#character {border: 1px solid black}')
-        character_image = qt_gui.QPixmap('img/character.png')
+        # self.setStyleSheet('#character {border: 1px solid black}')
+        character_image = qt_gui.QPixmap(character_image_path)
         self.setPixmap(character_image)
         self.move(100, 100)
         self.resize(character_image.width(), character_image.height())
@@ -40,9 +40,11 @@ class Character(qt.QLabel):
 
         elif direction == 'Down':
             window_height = window.height()
+            print('w_height', window_height)
             character_height = self.height()
             character_bottom_bound = y + character_height
-
+            print('character_bottom_bound', character_bottom_bound)
+            print('==================')
             if character_bottom_bound + self.step <= window_height:
                 return True
             else:

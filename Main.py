@@ -6,7 +6,9 @@ from Character import Character
 
 if __name__ == '__main__':
     app = qt.QApplication(sys.argv)
-    window = Window()
+    screen_size = app.primaryScreen().size()
+    window = Window(screen_size)
+    # print('screen_height', screen_size.height())
     # character = Character(win, 'img/character.png')
     # bg.add_character()
     # character = Character(background.window)
