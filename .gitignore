@@ -1,2 +1,5 @@
 .idea/
+.babelrc
+.editorconfig
 __pycache__
+node_modules
