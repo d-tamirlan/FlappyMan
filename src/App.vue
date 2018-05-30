@@ -30,12 +30,14 @@ export default {
     margin: 0;
     width: 100%;
     height: 100%;
+    overflow: hidden;
   }
   #app {
     width: 100%;
     height: 100%;
-    background-image: url("./assets/background.png");
-    background-size: contain;
+    background: url("./assets/background.png") no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
   }
   #logo {
     position: absolute;
