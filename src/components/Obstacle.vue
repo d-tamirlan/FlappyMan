@@ -22,7 +22,10 @@
 </template>
 
 <script>
-export default {
+//  import Character from './Character.vue'
+
+  export default {
+    props: ['left-px'],
   data() {
     return {
       width: 50,
@@ -43,8 +46,6 @@ export default {
   },
   methods: {
     calculateHeight(obstacles_couple){
-      console.log('------------calculateHeight-----------');
-      console.log(window.innerHeight);
 
       let
         min_height = this.min_padding,
@@ -59,7 +60,6 @@ export default {
       return obstacles_couple
     },
     initObstacles(){
-      console.log('------------initObstacles-----------');
 
       let
         max_obstacles_qty = Math.round(window.innerWidth / this.space_between),
@@ -86,16 +86,62 @@ export default {
 //      for (let i=0; i<obstacles_qty; i++){
 //      }
     },
-    moveObstacles(){
-      console.log('------------moveObstacles-----------');
-      if (this.stop) return null;
+    clashCheck(){
+//      return new Promise(resolve => {
+        this.items.forEach(function (obstacles_couple, index, array) {
+          let
+            obstacle_top = obstacles_couple.obstacle_top,
+            obstacle_bottom = obstacles_couple.obstacle_bottom,
+            character = this.$parent.$children[0],
+            character_right_bound = character.left_px + character.width,
 
+//            left_bound_intersection = character.left_px > obstacle_top.left && character.left_px < obstacle_top.right_bound,
+//            right_bound_intersection = character_right_bound > obstacle_top.left && character_right_bound < obstacle_top.right_bound,
+
+            left_bound_intersection = obstacle_top.left > character.left_px && obstacle_top.left < character_right_bound,
+            right_bound_intersection = obstacle_top.right_bound < character_right_bound && obstacle_top.right_bound > character.left_px;
+
+  //          obstacle_top_range_x = Array.from({length: this.width}, (x,i) => i + obstacle_top.left),
+  //          obstacle_top_range_y = Array.from({length: obstacle_top.height}, (x,i) => i),
+  //
+  //          obstacle_bottom_range_x = Array.from({length: obstacle_bottom.width}, (x,i) => i + obstacle_bottom.left),
+  //          obstacle_bottom_range_y = Array.from({length: obstacle_bottom.height}, (x,i) => i),
+  //
+  //          character_range_x = Array.from({length: Character.data().width}, (x,i) => i + Character.data().left_px),
+  //          character_range_y = Array.from({length: Character.data().height}, (x,i) => i + Character.data().top_px),
+  //
+  //          character_top_intersection_x = obstacle_top_range_x.filter(function (i) {return character_range_x.indexOf(i) !== -1}),
+  //          character_top_intersection_y = obstacle_top_range_y.filter(function (i) {return character_range_y.indexOf(i) !== -1}),
+  //
+  //          character_bottom_intersection_x = obstacle_bottom_range_x.filter(function (i) {return character_range_x.indexOf(i) !== -1}),
+  //          character_bottom_intersection_y = obstacle_bottom_range_y.filter(function (i) {return character_range_y.indexOf(i) !== -1});
+
+          console.log('----------------------');
+          console.log(this.$parent);
+          console.log(obstacle_top.left);
+          console.log(left_bound_intersection);
+          console.log(right_bound_intersection);
+
+          if (character.top_px <= obstacle_top.height && (left_bound_intersection === true || right_bound_intersection ===  true)){
+            alert('top obstacle clash!!!');
+            this.stop = true
+//            console.log('top obstacle clash!!!')
+          } else if ((character.top_px+character.height) >= (obstacle_top.height + this.slot) && (left_bound_intersection === true || right_bound_intersection ===  true)){
+            alert('bottom obstacle clash!!!');
+            this.stop = true
+          }
+        }, this);
+//        resolve();
+//      })
+    },
+    moveObstacles(){
+      if (this.stop) return null;
       this.items.forEach(function (obstacles_couple, index, array) {
         let
           obstacle_top = obstacles_couple.obstacle_top,
           obstacle_bottom = obstacles_couple.obstacle_bottom;
 
-        if (obstacle_top.right_bound < 0){
+        if (obstacle_top.right_bound < 0) {
           this.calculateHeight(obstacles_couple);
 
           obstacle_top.left = window.innerWidth + this.space_between;
@@ -108,6 +154,9 @@ export default {
         obstacle_bottom.right_bound -= obstacle_bottom.left + this.width;
       }, this);
 
+//      let promise = this.clashCheck();
+        this.clashCheck();
+//      setTimeout(promise.then(result => this.moveObstacles()), this.move_timeout);
       setTimeout(this.moveObstacles, this.move_timeout);
     }
   }

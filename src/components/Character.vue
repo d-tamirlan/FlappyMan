@@ -9,6 +9,8 @@
 </template>
 
 <script>
+  import Obstacle from './Obstacle.vue'
+
 export default {
   data() {
     return {
@@ -19,6 +21,9 @@ export default {
       left_px: 10,
       top_px: Math.round(window.innerHeight/2)
     }
+  },
+  components: {
+    Obstacle
   },
   created() {
     window.addEventListener('keydown', event => {
@@ -35,25 +40,20 @@ export default {
   },
   methods:{
     moveUp(){
-      console.log('------------moveUp-----------');
       let new_top_px = this.top_px - this.step;
       this.top_px = (new_top_px < 0) ? 0 : new_top_px;
       //  условие ? значение1 : значение2
     },
     moveDown(){
-      console.log('------------moveDown-----------');
       let
         new_top_px = this.top_px + this.step,
         bottom_bound = new_top_px + this.height,
         window_height = window.innerHeight;
       this.top_px = (bottom_bound > window_height) ? (window_height - this.height) : new_top_px;
-      console.log(this.top_px);
 
       //  условие ? значение1 : значение2
     },
     moveRight(){
-      console.log('------------moveRight-----------');
-      console.log(window.innerWidth);
       let
         new_left_px = this.left_px + this.step,
         right_bound = new_left_px + this.width,
@@ -62,11 +62,9 @@ export default {
       //  условие ? значение1 : значение2
     },
     moveLeft(){
-      console.log('------------moveLeft-----------');
       let
         new_left_px = this.left_px - this.step;
       this.left_px = (new_left_px < 0) ? 0 : new_left_px;
-      console.log(this.left_px);
 
       //  условие ? значение1 : значение2
     }
