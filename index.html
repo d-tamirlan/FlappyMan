@@ -2,12 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:title" content="Flappy man">
+    <meta property="og:image" content="src/assets/character.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
     <title>Flappy man</title>
+
+    <script type="text/javascript" src="https://vk.com/js/api/share.js?93" charset="windows-1251"></script>
   </head>
   <body>
     <!--<div id="background">-->
     <div id="app">
     </div>
+    <section id="social_sharing" style="display: none">
+      <script> document.write(VK.Share.button({
+        title: 'Flappy man',
+        image: 'src/assets/character.png',
+        type: 'link',
+        text: 'Поделиться'
+      })); </script>
+
+      <a href="https://telegram.me/share/url?url=(ссылка)&text=(описание)">Telegram</a>
+    </section>
     <script src="/dist/build.js"></script>
   </body>
 </html>

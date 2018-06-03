@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div id="statistic">
+      <div><span id="pointsText">Current: </span><span id="points">{{points}}</span></div>
+      <div><span id="recordText">Best record: </span><span id="record">{{record}}</span></div>
+    </div>
     <div v-for="item in items" class="obstacles_couple_wrapper"
          v-bind:style="{left: item.obstacle_top.left + 'px'}"
     >
@@ -22,27 +26,26 @@
 </template>
 
 <script>
-//  import Character from './Character.vue'
-
-  export default {
-    props: ['left-px'],
+export default {
   data() {
     return {
       width: 50,
       obstacle_top_src: 'src/assets/obstacle_top.png',
       obstacle_bottom_src: 'src/assets/obstacle_bottom.png',
       step: 3,
-      space_between: 300,
-      move_timeout: 10,
-      stop: false,
-      min_padding: 100,
-      slot: Math.round(window.innerHeight / 4),
+      space_between: 400,
+      move_timeout: 20,
+      min_padding: 80,
+      points: 0,
+      record: this.$cookie.get('record') || 0,
+      slot: Math.round(window.innerHeight / 3),
       items: [],
     }
   },
   created(){
     this.items = this.initObstacles();
     this.moveObstacles();
+    this.$parent.raiseDifficultyLevel();
   },
   methods: {
     calculateHeight(obstacles_couple){
@@ -62,7 +65,7 @@
     initObstacles(){
 
       let
-        max_obstacles_qty = Math.round(window.innerWidth / this.space_between),
+        max_obstacles_qty = Math.round(window.innerWidth / this.space_between) + 1,
         obstacles_position = Math.round(window.innerWidth / 2),
         items = [];
 
@@ -83,69 +86,63 @@
       }
       return items
 
-//      for (let i=0; i<obstacles_qty; i++){
-//      }
     },
     clashCheck(){
-//      return new Promise(resolve => {
         this.items.forEach(function (obstacles_couple, index, array) {
           let
             obstacle_top = obstacles_couple.obstacle_top,
-            obstacle_bottom = obstacles_couple.obstacle_bottom,
             character = this.$parent.$children[0],
-            character_right_bound = character.left_px + character.width,
 
-//            left_bound_intersection = character.left_px > obstacle_top.left && character.left_px < obstacle_top.right_bound,
-//            right_bound_intersection = character_right_bound > obstacle_top.left && character_right_bound < obstacle_top.right_bound,
+            obstacle_bottom_top_px = obstacle_top.height + this.slot,
+
+            character_right_bound = character.left_px + character.width,
+            character_bottom_bound = character.top_px+character.height,
 
             left_bound_intersection = obstacle_top.left > character.left_px && obstacle_top.left < character_right_bound,
-            right_bound_intersection = obstacle_top.right_bound < character_right_bound && obstacle_top.right_bound > character.left_px;
+            right_bound_intersection = obstacle_top.right_bound < character_right_bound && obstacle_top.right_bound > character.left_px,
 
-  //          obstacle_top_range_x = Array.from({length: this.width}, (x,i) => i + obstacle_top.left),
-  //          obstacle_top_range_y = Array.from({length: obstacle_top.height}, (x,i) => i),
-  //
-  //          obstacle_bottom_range_x = Array.from({length: obstacle_bottom.width}, (x,i) => i + obstacle_bottom.left),
-  //          obstacle_bottom_range_y = Array.from({length: obstacle_bottom.height}, (x,i) => i),
-  //
-  //          character_range_x = Array.from({length: Character.data().width}, (x,i) => i + Character.data().left_px),
-  //          character_range_y = Array.from({length: Character.data().height}, (x,i) => i + Character.data().top_px),
-  //
-  //          character_top_intersection_x = obstacle_top_range_x.filter(function (i) {return character_range_x.indexOf(i) !== -1}),
-  //          character_top_intersection_y = obstacle_top_range_y.filter(function (i) {return character_range_y.indexOf(i) !== -1}),
-  //
-  //          character_bottom_intersection_x = obstacle_bottom_range_x.filter(function (i) {return character_range_x.indexOf(i) !== -1}),
-  //          character_bottom_intersection_y = obstacle_bottom_range_y.filter(function (i) {return character_range_y.indexOf(i) !== -1});
+            top_obstacle_clash = character.top_px <= obstacle_top.height && (left_bound_intersection || right_bound_intersection),
 
-          console.log('----------------------');
-          console.log(this.$parent);
-          console.log(obstacle_top.left);
-          console.log(left_bound_intersection);
-          console.log(right_bound_intersection);
+            bottom_obstacle_clash = character_bottom_bound >= obstacle_bottom_top_px && (left_bound_intersection || right_bound_intersection);
 
-          if (character.top_px <= obstacle_top.height && (left_bound_intersection === true || right_bound_intersection ===  true)){
-            alert('top obstacle clash!!!');
-            this.stop = true
-//            console.log('top obstacle clash!!!')
-          } else if ((character.top_px+character.height) >= (obstacle_top.height + this.slot) && (left_bound_intersection === true || right_bound_intersection ===  true)){
-            alert('bottom obstacle clash!!!');
-            this.stop = true
+          if (top_obstacle_clash || bottom_obstacle_clash){
+            this.$parent.pause = true;
+
+            if (this.points > this.record) this.$cookie.set('record', this.points, 7);
+            let social_sharing = document.querySelector('#social_sharing').innerHTML;
+//            document.querySelector('#social_sharing').innerHTML = ''
+            this.$swal({
+              title: 'Game Over',
+              type: 'error',
+              html: 'Sharing us with social networks: ' + social_sharing,
+//              html: true,
+              confirmButtonText: '<span style="color: #35495e">Try again!</span>',
+              confirmButtonColor: '#41b883',
+            }).then(() => {
+              this.$parent.restartGame();
+            });
           }
         }, this);
-//        resolve();
-//      })
     },
     moveObstacles(){
-      if (this.stop) return null;
+      if (this.$parent.pause) return null;
       this.items.forEach(function (obstacles_couple, index, array) {
         let
           obstacle_top = obstacles_couple.obstacle_top,
-          obstacle_bottom = obstacles_couple.obstacle_bottom;
+          obstacle_bottom = obstacles_couple.obstacle_bottom,
+          last_obstacle = array[array.length-1].obstacle_top;
 
         if (obstacle_top.right_bound < 0) {
           this.calculateHeight(obstacles_couple);
-
-          obstacle_top.left = window.innerWidth + this.space_between;
+          this.points += 1;
+          obstacle_top.left = last_obstacle.right_bound + this.space_between;
           obstacle_bottom.left = obstacle_top.left;
+
+          let changed_obstacle_couple = {'obstacle_top': obstacle_top, 'obstacle_bottom': obstacle_bottom};
+
+          array.splice(index, 1);
+          array.splice(array.length, 0, changed_obstacle_couple)
+
         } else {
           obstacle_top.left -= this.step;
           obstacle_bottom.left -= this.step;
@@ -154,10 +151,12 @@
         obstacle_bottom.right_bound -= obstacle_bottom.left + this.width;
       }, this);
 
-//      let promise = this.clashCheck();
-        this.clashCheck();
-//      setTimeout(promise.then(result => this.moveObstacles()), this.move_timeout);
+      this.clashCheck();
+//      if (this.move_timeout === 0){
+//        this.moveObstacles()
+//      }else{
       setTimeout(this.moveObstacles, this.move_timeout);
+//      }
     }
   }
 }
@@ -171,8 +170,23 @@
     justify-content: space-between;
     height: 100%;
   }
-  .obstacle_bottom{
+  #statistic{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    left: 10px;
+    font-size: 30px;
+    z-index: 1;
+
+    #points, #record{
+      font-family: 'Algerian';
+      color: #01b889;
+    }
+    #pointsText, #recordText{
+      font-family: 'Consolas';
+      color: #35495e;
+    }
   }
-  .obstacle_top{
-  }
+
 </style>

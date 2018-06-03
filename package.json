@@ -1,6 +1,6 @@
 {
-  "name": "Flappy_man",
-  "description": "simple game",
+  "name": "Flappy-man",
+  "description": "Simple game based on 'flappy bird' game and powered by vue js",
   "version": "1.0.0",
   "author": "Tamirlan",
   "license": "MIT",
@@ -12,6 +12,8 @@
   "dependencies": {
     "npm": "^6.1.0",
     "vue": "^2.5.11",
+    "vue-cookie": "^1.1.4",
+    "vue-social-sharing": "^2.3.3",
     "vue-sweetalert2": "^1.2.4"
   },
   "browserslist": [

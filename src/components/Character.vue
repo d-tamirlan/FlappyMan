@@ -27,6 +27,8 @@ export default {
   },
   created() {
     window.addEventListener('keydown', event => {
+      if (this.$parent.pause) return null;
+
       if (event.keyCode === 38){
         this.moveUp()
       } else if (event.keyCode === 40){
