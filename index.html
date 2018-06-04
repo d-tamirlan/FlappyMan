@@ -4,32 +4,41 @@
     <meta charset="utf-8">
     <meta name="msapplication-TileColor" content="#2d89ef">
     <meta name="theme-color" content="#ffffff">
-    <meta property="og:title" content="Flappy man">
-    <meta property="og:image" content="src/assets/character.png">
+
+    <meta name="title" content="Flappy man"/>
+    <meta name="description" content="Simple game, based on 'flappy bird' game and powered by vue js"/>
+
+    <meta property="og:title" content="Flappy man"/>
+    <meta property="og:description" content="Simple game, based on 'flappy bird' game and powered by vue js"/>
+
+    <meta property="og:image" content="/dist/character.png"/>
+
+    <title>Flappy man</title>
+
     <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 
-    <title>Flappy man</title>
-
     <script type="text/javascript" src="https://vk.com/js/api/share.js?93" charset="windows-1251"></script>
   </head>
   <body>
-    <!--<div id="background">-->
     <div id="app">
     </div>
     <section id="social_sharing" style="display: none">
-      <script> document.write(VK.Share.button({
-        title: 'Flappy man',
-        image: 'src/assets/character.png',
-        type: 'link',
-        text: 'Поделиться'
-      })); </script>
-
-      <a href="https://telegram.me/share/url?url=(ссылка)&text=(описание)">Telegram</a>
+      <script>
+        document.write(VK.Share.button(false,
+          {
+            type: 'custom',
+            text: '<img src="/dist/vk.png" style="width: 50px; border-radius: 50%" alt="vk">'
+          })
+        );
+      </script>
+      <a id="telegram_share">
+        <img src="/dist/tg.png" alt="telegram" width="50px" style="margin-left: 30px; margin-top: 15px;">
+      </a>
     </section>
-    <script src="/dist/build.js"></script>
+    <script src="dist/build.js"></script>
   </body>
 </html>

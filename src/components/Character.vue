@@ -16,7 +16,7 @@ export default {
     return {
       width: 106,
       height: 60,
-      img_src: 'src/assets/character.png',
+      img_src: '/dist/character.png',
       step: 30,
       left_px: 10,
       top_px: Math.round(window.innerHeight/2)

@@ -30,8 +30,8 @@ export default {
   data() {
     return {
       width: 50,
-      obstacle_top_src: 'src/assets/obstacle_top.png',
-      obstacle_bottom_src: 'src/assets/obstacle_bottom.png',
+      obstacle_top_src: '/dist/obstacle_top.png',
+      obstacle_bottom_src: '/dist/obstacle_bottom.png',
       step: 3,
       space_between: 400,
       move_timeout: 20,
@@ -108,14 +108,21 @@ export default {
           if (top_obstacle_clash || bottom_obstacle_clash){
             this.$parent.pause = true;
 
-            if (this.points > this.record) this.$cookie.set('record', this.points, 7);
+            if (this.points > this.record) {
+              this.$cookie.set('record', this.points, 7);
+              this.record = this.points;
+            }
+
+            let telegram_share = document.querySelector('#telegram_share');
+
+            telegram_share.href = `https://t.me/share/url?url=${window.location.hostname}&text=My best record is ${this.record}! Try yourself!`;
+
             let social_sharing = document.querySelector('#social_sharing').innerHTML;
-//            document.querySelector('#social_sharing').innerHTML = ''
+
             this.$swal({
               title: 'Game Over',
               type: 'error',
-              html: 'Sharing us with social networks: ' + social_sharing,
-//              html: true,
+              html: 'Share us with social networks:<br> ' + social_sharing,
               confirmButtonText: '<span style="color: #35495e">Try again!</span>',
               confirmButtonColor: '#41b883',
             }).then(() => {

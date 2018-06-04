@@ -1,28 +1,12 @@
 <template>
   <div id="app">
-    <!--<section id="social_sharing">-->
-      <!--<script> document.write(VK.Share.button()); </script>-->
-      <!--<social-sharing url="https://vuejs.org/"-->
-                        <!--title="The Progressive JavaScript Framework"-->
-                        <!--description="Intuitive, Fast and Composable MVVM for building interactive interfaces."-->
-                        <!--quote="Vue is a progressive framework for building user interfaces."-->
-                        <!--hashtags="vuejs,javascript,framework"-->
-                        <!--twitter-user="vuejs"-->
-                        <!--inline-template>-->
-        <!--<network network="vk">-->
-          <!--<i class="fa fa-vk"></i> VKontakte-->
-        <!--</network>-->
-      <!--</social-sharing>-->
-    <!--</section>-->
     <div class="control"
          :class="pause ? 'play' : 'pause'"
          v-on:click="playGame"
     >
       <span class="left"></span><span class="right"></span>
     </div>
-    <!--<img id="pause" src="./assets/pause.png" alt="pause">-->
-    <!--<img id="play" src="./assets/play.png" alt="play">-->
-    <img id="logo" src="./assets/logo.png">
+    <img id="logo" src="/dist/logo.png">
     <character></character>
     <obstacle></obstacle>
   </div>
@@ -78,8 +62,7 @@ export default {
 
       obstacles.items = obstacles.initObstacles();
       obstacles.points = 0;
-      obstacles.move_timeout = 30;
-      obstacles.record = this.$cookie.get('record') || 0;
+      obstacles.move_timeout = 20;
       this.pause = false;
       obstacles.moveObstacles();
       this.raiseDifficultyLevel()
@@ -91,7 +74,6 @@ export default {
       if (this.pause === true || obstacles.move_timeout === 0) return null;
 
       obstacles.move_timeout -= obstacles.move_timeout > 10 ? 1: 0.5;
-      console.log(obstacles.move_timeout);
       setTimeout(this.raiseDifficultyLevel, this.raise_level_timeout);
     }
   },
