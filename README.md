@@ -1,6 +1,6 @@
-# y
+# Flappy man
 
-> simple game
+> Simple game, based on 'flappy bird' game and powered by vue js
 
 ## Build Setup
 
