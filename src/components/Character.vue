@@ -67,7 +67,6 @@ export default {
       let
         new_left_px = this.left_px - this.step;
       this.left_px = (new_left_px < 0) ? 0 : new_left_px;
-
       //  условие ? значение1 : значение2
     }
   }

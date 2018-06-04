@@ -32,13 +32,19 @@ export default {
       width: 50,
       obstacle_top_src: '/dist/obstacle_top.png',
       obstacle_bottom_src: '/dist/obstacle_bottom.png',
+      // moving step of obstacles couple
       step: 3,
+      // space between obstacles couple
       space_between: 400,
       move_timeout: 20,
-      min_padding: 80,
+      min_height: 80,
+      // user points
       points: 0,
+      // user best record
       record: this.$cookie.get('record') || 0,
+      // space between top obstacle and bottom obstacle
       slot: Math.round(window.innerHeight / 3),
+      // array of obstacles couples
       items: [],
     }
   },
@@ -51,8 +57,8 @@ export default {
     calculateHeight(obstacles_couple){
 
       let
-        min_height = this.min_padding,
-        max_height = window.innerHeight - this.min_padding - this.slot,
+        min_height = this.min_height,
+        max_height = window.innerHeight - this.min_height - this.slot,
         // random height from range
         obstacle_top_height = Math.floor(Math.random() * (max_height - min_height) + min_height),
         obstacle_bottom_height = Math.round(window.innerHeight - (obstacle_top_height + this.slot));
@@ -66,6 +72,7 @@ export default {
 
       let
         max_obstacles_qty = Math.round(window.innerWidth / this.space_between) + 1,
+        // from middle of screen to right bound
         obstacles_position = Math.round(window.innerWidth / 2),
         items = [];
 
@@ -115,6 +122,7 @@ export default {
 
             let telegram_share = document.querySelector('#telegram_share');
 
+            // dynamic description form telegram sharing
             telegram_share.href = `https://t.me/share/url?url=${window.location.hostname}&text=My best record is ${this.record}! Try yourself!`;
 
             let social_sharing = document.querySelector('#social_sharing').innerHTML;
@@ -122,7 +130,7 @@ export default {
             this.$swal({
               title: 'Game Over',
               type: 'error',
-              html: 'Share us with social networks:<br> ' + social_sharing,
+              html: 'Share us on social media:<br> ' + social_sharing,
               confirmButtonText: '<span style="color: #35495e">Try again!</span>',
               confirmButtonColor: '#41b883',
             }).then(() => {
@@ -159,11 +167,7 @@ export default {
       }, this);
 
       this.clashCheck();
-//      if (this.move_timeout === 0){
-//        this.moveObstacles()
-//      }else{
       setTimeout(this.moveObstacles, this.move_timeout);
-//      }
     }
   }
 }
